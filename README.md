@@ -61,6 +61,7 @@ POST: http://localhost:9001/credits
 Rezultat: {losowa_liczba}
 
 W przypadku korzystania z "curl" przykładowe zapytanie będzie wyglądało następująco (korzystałem z wiersza poleceń systemu Windows):
+
 curl -X POST http://localhost:9001/credits -H "Content-Type: application/json" -d "{\"credit\":{\"name\":\"Kredyt 1\"},\"customer\":{\"firstName\":\"Jan\",\"surname\":\"Kowalski\",\"pesel\":\"12345678901\"},\"product\":{\"name\":\"Produkt 1\",\"value\":100}}"
 
 
