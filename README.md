@@ -134,6 +134,7 @@ Przykładowa odpowiedź:\
 [{"creditId":556818,"firstName":"Jan","surname":"Kowalski","pesel":"12345678901"}]
 
 10. curl http://localhost:9001/customers?id=11111,xxxx - gdy obie wartości są nieprawidłowe, zwrócona zostanie pusta lista
+
 Przykładowa odpowiedź:\
 []
 
