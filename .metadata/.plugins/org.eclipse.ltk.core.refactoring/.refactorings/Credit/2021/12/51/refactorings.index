@@ -1,0 +1,19 @@
+1640442957461	Rename type 'DockerOstatniaProbaApplication'
+1640469210361	Copy file
+1640519161908	Rename type 'Credit'
+1640519197290	Rename type 'MainEntity'
+1640519220637	Rename type 'Entity'
+1640523406460	Rename type 'Entity'
+1640525981437	Rename field 'name'
+1640526304319	Copy compilation unit
+1640526323577	Copy compilation unit
+1640526663277	Delete element
+1640528383766	Copy compilation unit
+1640529294766	Copy compilation unit
+1640529307837	Copy compilation unit
+1640533463814	Rename field 'parametersKey'
+1640533510963	Rename type 'Parameters'
+1640534337941	Rename type 'AbstractFactory'
+1640535044535	Move compilation unit
+1640535052628	Delete element
+1640537228917	Rename method 'saveEntity'

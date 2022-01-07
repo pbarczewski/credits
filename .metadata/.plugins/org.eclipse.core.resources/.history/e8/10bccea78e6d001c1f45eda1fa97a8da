@@ -1,0 +1,21 @@
+package pl.pbarczewski.request;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import pl.pbarczewski.entity.EntityInterface;
+import pl.pbarczewski.urls.Url;
+
+public class PostRequest<T> extends Request<T> {
+	
+	public PostRequest(Url url, EntityInterface entityInterface) {
+		super(url, entityInterface);
+		this.httpMethod = HttpMethod.POST;
+	}
+
+	@SuppressWarnings("unchecked")
+	private HttpEntity<T> entity = new HttpEntity<T>((T) entityInterface);
+	
+	@Override
+	public void execute() {
+		restTemplate.exchange(url.getUrl(), httpMethod, entity, entityInterface.getClass());
+	}
+}

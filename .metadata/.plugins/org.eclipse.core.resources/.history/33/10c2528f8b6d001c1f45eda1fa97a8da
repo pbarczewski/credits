@@ -1,0 +1,73 @@
+package pl.pbarczewski.entity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+
+// Encja reprezentująca klienta w bazie danych
+// 
+@Entity
+@Table(name="Customer", schema="CustomerDB")
+public class Customer implements EntityInterface {
+
+	@Id
+	private int creditId;
+	@NotNull
+	@Pattern(regexp="[A-Z][a-z]{2,49}$")
+	private String firstName;
+	@NotNull
+	@Pattern(regexp="[A-Z][a-z]+[-]?[A-Z]?[a-z]+$")
+	private String surname;
+	@NotNull
+	@Column(unique = true)
+	@Pattern(regexp="[0-9]{11}")
+	private String pesel;
+	
+	public Customer() {
+		
+	}
+	
+	public Customer(@NotNull @Pattern(regexp = "[A-Z][a-z]{2,48}$") String firstName,
+			@NotNull @Pattern(regexp = "[A-Z][a-z]{2,24}[-]?[A-Z]?[a-z]{1,24}$") String surname,
+			@NotNull @Pattern(regexp = "[0-9]{11}") String pesel) {
+		this.firstName = firstName;
+		this.surname = surname;
+		this.pesel = pesel;
+	}
+	
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public int getCreditId() {
+		return creditId;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
+	public String getPesel() {
+		return pesel;
+	}
+
+	public void setPesel(String pesel) {
+		this.pesel = pesel;
+	}
+
+	@Override
+	public void setCreditId(int id) {
+		this.creditId = id;	
+	}
+}

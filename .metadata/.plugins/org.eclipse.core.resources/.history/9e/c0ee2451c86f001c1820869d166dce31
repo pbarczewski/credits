@@ -1,0 +1,5 @@
+package pl.pbarczewski.entity;
+
+public interface EntityInterface {
+	void setCreditId(int id);
+}

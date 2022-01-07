@@ -1,0 +1,19 @@
+package pl.pbarczewski.urls;
+
+public enum QueryParameter {
+	ID("?id={id}");
+	
+	private String ids;
+
+	private QueryParameter(String ids) {
+		this.ids = ids;
+	}
+
+	public String getIds() {
+		return ids;
+	}
+
+	public void setIds(String ids) {
+		this.ids = ids;
+	}
+}

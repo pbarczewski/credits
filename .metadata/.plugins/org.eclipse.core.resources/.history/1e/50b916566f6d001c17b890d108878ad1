@@ -1,0 +1,101 @@
+package pl.pbarczewski.service;
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import pl.pbarczewski.components.RequestInterface;
+import pl.pbarczewski.entity.Credit;
+import pl.pbarczewski.entity.Customer;
+import pl.pbarczewski.entity.EntityInterface;
+import pl.pbarczewski.entity.Product;
+import pl.pbarczewski.repository.CreditRepository;
+import pl.pbarczewski.request.GetRequest;
+import pl.pbarczewski.request.PostRequest;
+import pl.pbarczewski.request.Request;
+import pl.pbarczewski.urls.QueryParameter;
+import pl.pbarczewski.urls.Url;
+import pl.pbarczewski.wrapper.Entities;
+
+
+// Klasa będąca głownym serwisem aplikacji.
+// Korzysta z klasy 'CreditRepository' w celu manipulowania danymi w schemacie 'CreditDB'.
+// Zawiera metody prywatne i publiczne.
+@Service
+public class CreditService {
+	
+	private CreditRepository creditRepository;
+	private Request request;
+	private Entities entities;
+	private Customer customer;
+	private Credit credit;
+	private Product product;
+	
+	
+	@Autowired
+	public CreditService(CreditRepository creditRepository) {
+		this.creditRepository = creditRepository;
+	}
+
+	public List<Credit> getCredits() {
+		return creditRepository.findAll();
+	}
+	
+
+	// Główna metoda serwisu, zawiera w sobie metody pomocnicze "getEntities", 
+	// oraz "post" i "completeCredit".
+	// Przyjmuje jako parametr obiekt typu 'Entities'.
+	// Zwraca wartość typu 'int' będącą nadanym numerem kredytu.
+	public int createCredit(Entities entities) throws Exception {
+		getEntities(entities);
+		post(Url.CUSTOMER_URL, customer);
+		post(Url.PRODUCT_URL, product);
+		completeCredit(customer, product);
+		creditRepository.save(this.entities.getCredit());
+		return credit.getId();
+	}
+	
+	// Prywatna metoda pomocnicza, przypisuje pola obiektu "Entities" do osobnych zmiennych
+	// odpowiednio "credit", "customer" i "product". Wywołuje także metodę "setId"
+	// służącą do nadania każdemu wyżej wymienionemu obiektowi taki sam numer Id.
+	// Niczego nie zwraca
+	private void getEntities(Entities entities) throws Exception {
+		this.entities = entities;
+		this.entities.setId();
+		this.credit = entities.getCredit();
+		this.customer = entities.getCustomer();
+		this.product = entities.getProduct();
+	}
+	
+	
+	private void post(Url url, EntityInterface entity) {
+		if(entity != null) {
+		request = new PostRequest<Object>(url, entity);
+		RequestInterface.createConnection(request);
+		} else {
+			throw new NullPointerException("Entity is empty");
+		}
+	}
+	
+	public List<Product> getProducts(String id) {
+		request = new GetRequest(Url.PRODUCT_URL, product, id, QueryParameter.ID);
+		RequestInterface.createConnection(request);
+		return request.getListOfEntities();
+		
+	}
+	
+	public List<Customer> getCustomers(String id) {
+		request = new GetRequest(Url.CUSTOMER_URL, customer, id, QueryParameter.ID);
+		RequestInterface.createConnection(request);
+		return request.getListOfEntities();
+	}
+	
+	// Prywatna metoda pomocnicza, służy do przypisania do obiektu klasy 'Credit' 
+	// obiektów typu 'Product' i 'Customer'
+	private void completeCredit(Customer customer, Product product) throws Exception {
+		this.credit.completeCreditInfo(customer, product);
+	}
+	
+
+}

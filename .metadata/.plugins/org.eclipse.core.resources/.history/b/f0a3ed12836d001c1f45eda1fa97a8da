@@ -1,0 +1,44 @@
+package pl.pbarczewski.request;
+
+import java.util.Arrays;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+
+import pl.pbarczewski.entity.Customer;
+import pl.pbarczewski.entity.EntityInterface;
+import pl.pbarczewski.entity.Product;
+import pl.pbarczewski.urls.QueryParameter;
+import pl.pbarczewski.urls.Url;
+
+public class GetRequest extends Request<Object> {
+	private String parametersValue;
+	private QueryParameter parameterKey;
+
+	public GetRequest(Url url, EntityInterface entityInterface, String parametersValue, 
+			QueryParameter parameterKey) {
+		super(url, entityInterface);
+		this.httpMethod = HttpMethod.GET;
+		this.parametersValue = parametersValue;
+		this.parameterKey = parameterKey;
+	}
+	
+	private void getEntities(EntityInterface entityInterface) {
+		String url = this.url.getUrl() + parameterKey.getIds();
+		  switch(entityInterface.getClass().getSimpleName()) { 
+		  case "Product":
+			  this.listOfEntities = Arrays.asList(restTemplate.getForObject(url, Product[].class, parametersValue)); 
+			  break;
+		  case "Customer":
+			  this.listOfEntities = Arrays.asList(restTemplate.getForObject(url, Customer[].class, parametersValue)); 	  
+			  break;
+		  default:
+			  throw new IllegalArgumentException("Wrong entity");	  
+		  }
+	}
+	
+	@Override
+	public void execute() {
+		getEntities(entityInterface);
+	}
+
+}

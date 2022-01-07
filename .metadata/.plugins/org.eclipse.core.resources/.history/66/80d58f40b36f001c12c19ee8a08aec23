@@ -1,0 +1,186 @@
+package pl.pbarczewski.controller;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import pl.pbarczewski.entity.Product;
+import pl.pbarczewski.service.ProductService;
+
+@Testcontainers
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+public class ProductControllerTest {
+
+	private Product firstProduct;
+	private Product secondProduct;
+	private Product thirdProduct;
+	private HttpEntity<Object> entity;
+	
+	@Autowired
+	private ProductController productController;
+	
+	@Autowired
+	private ProductService productService;
+	
+	@LocalServerPort
+	private int port;
+	
+	@Autowired
+	private TestRestTemplate restTemplate;
+	
+	@Container
+	private static MySQLContainer mysqlContainer = new MySQLContainer("mysql:latest");
+	
+	@DynamicPropertySource
+	public static void ovverideProps(DynamicPropertyRegistry registry) {
+		registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
+		registry.add("spring.datasource.username", mysqlContainer::getUsername);
+		registry.add("spring.datasource.password", mysqlContainer::getPassword);
+	}
+	
+	@BeforeEach
+	void init() {
+		firstProduct = new Product("First", 100);
+		firstProduct.setCreditId(12345);
+		secondProduct = new Product("Second", 200);
+		secondProduct.setCreditId(54321);
+		thirdProduct = new Product("Third", 300);
+		thirdProduct.setCreditId(98765);
+		entity = new HttpEntity<Object>(new HttpHeaders());
+	}
+	
+	
+	@Test
+	public void httpStatus_should_return_OK_if_url_is_correct() {
+		//given
+		//when
+		ResponseEntity<String> response = this.restTemplate.exchange("http://localhost:"+port +"/products", HttpMethod.GET, entity , String.class);
+		//then
+		assertEquals(response.getStatusCode(), HttpStatus.OK);
+	}
+	
+	@Test
+	public void httpStatus_should_return_NOT_FOUND_if_url_is_incorrect() {
+		//given
+		//when
+		ResponseEntity<String> response = this.restTemplate.exchange("http://localhost:"+port +"/product", HttpMethod.GET, entity , String.class);
+		//then
+		assertEquals(response.getStatusCode(), HttpStatus.NOT_FOUND);
+	}
+	
+	@Test
+	public void httpStatus_should_return_METHOD_NOT_ALLOWED_if_http_method_is_PUT() {
+		//given
+		//when
+		ResponseEntity<String> response = this.restTemplate.exchange("http://localhost:"+port +"/products", HttpMethod.PUT, entity , String.class);
+		//then
+		assertEquals(response.getStatusCode(), HttpStatus.METHOD_NOT_ALLOWED);
+	}
+	
+	@Test
+	public void httpStatus_should_return_METHOD_NOT_ALLOWED_if_http_method_is_DELETE() {
+		ResponseEntity<String> response = this.restTemplate.exchange("http://localhost:"+port +"/products", HttpMethod.DELETE, entity , String.class);
+		assertEquals(response.getStatusCode(), HttpStatus.METHOD_NOT_ALLOWED);
+	}
+	
+	@Test
+	public void product_list_should_be_empty_if_no_product_is_added() {
+		assertThat(this.restTemplate.getForObject("http://localhost:"+port +"/products?id=", Product[].class)).isEmpty();
+	}
+	
+	@Test
+	public void product_list_should_not_be_empty_if_product_is_added() {
+		//given
+		//when
+		this.restTemplate.postForObject("http://localhost:"+port +"/products", firstProduct, Product.class);
+		this.restTemplate.postForObject("http://localhost:"+port +"/products", secondProduct, Product.class);
+		Product[] products = this.restTemplate.getForObject("http://localhost:"+port +"/products?id=", Product[].class);
+		//then
+		assertEquals(products.length, 2);
+	}
+	
+	@Test
+	public void check_if_Product_is_added_to_the_list_correctly() {
+		//given
+		//when
+		this.restTemplate.postForObject("http://localhost:"+port +"/products", firstProduct, Product.class);
+		Product[] products = this.restTemplate.getForObject("http://localhost:"+port +"/products?id=", Product[].class);
+		Product receivedProduct = products[0];
+		//then
+		assertAll(
+					() -> assertEquals(receivedProduct.getCreditId(), 12345),
+					() -> assertEquals(receivedProduct.getName(), "First"),
+					() -> assertEquals(receivedProduct.getValue(), 100)		
+				);
+	}
+	
+	@Test
+	public void only_products_with_provided_id_should_be_returned() {
+		//given
+		//when
+		this.restTemplate.postForObject("http://localhost:"+port +"/products", firstProduct, Product.class);
+		this.restTemplate.postForObject("http://localhost:"+port +"/products", secondProduct, Product.class);
+		this.restTemplate.postForObject("http://localhost:"+port +"/products", thirdProduct, Product.class);
+		Product[] products = this.restTemplate.getForObject("http://localhost:"+port +"/products?id=12345,98765", Product[].class);
+		//then
+		assertAll(
+				() -> assertEquals(products.length, 2),
+				() -> assertEquals(products[0].getName(), "First"),
+				() -> assertEquals(products[0].getCreditId(), 12345),
+				() -> assertEquals(products[1].getName(), "Third"),
+				() -> assertEquals(products[1].getCreditId(), 98765)
+				);
+	}
+	
+	@Test
+	public void only_products_with_correct_parameters_should_be_returned() {
+		//given
+		//when
+		this.restTemplate.postForObject("http://localhost:"+port +"/products", firstProduct, Product.class);
+		this.restTemplate.postForObject("http://localhost:"+port +"/products", secondProduct, Product.class);
+		this.restTemplate.postForObject("http://localhost:"+port +"/products", thirdProduct, Product.class);
+		Product[] products = this.restTemplate.getForObject("http://localhost:"+port +"/products?id=12345,xxxx,54321", Product[].class);
+		
+		//then
+		assertAll(
+				() -> assertEquals(products.length, 2),
+				() -> assertEquals(products[0].getName(), "First"),
+				() -> assertEquals(products[0].getCreditId(), 12345),
+				() -> assertEquals(products[1].getName(), "Second"),
+				() -> assertEquals(products[1].getCreditId(), 54321)
+				);
+	}
+	
+	@Test
+	public void no_products_should_be_returned_if_parameters_are_wrong() {
+		//given
+		//when
+		this.restTemplate.postForObject("http://localhost:"+port +"/products", firstProduct, Product.class);
+		this.restTemplate.postForObject("http://localhost:"+port +"/products", secondProduct, Product.class);
+		this.restTemplate.postForObject("http://localhost:"+port +"/products", thirdProduct, Product.class);
+		//then
+		assertThat(this.restTemplate.getForObject("http://localhost:"+port +"/products?id=1111,xxxx,123dadsa", Product[].class)).isEmpty();
+	}
+	
+	
+}

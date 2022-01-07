@@ -1,0 +1,15 @@
+1641307721756	Rename enum constant 'IDS'
+1641318496483	Copy compilation unit
+1641318543422	Copy compilation unit
+1641320399046	Rename method 'completeCreditInfo'
+1641322713381	Rename field 'parameterKey'
+1641322723438	Rename local variable 'parameterKey'
+1641322738346	Rename field 'parametersValue'
+1641490715451	Rename package 'pl.pbarczewski.databes'
+1641490747779	Copy compilation unit
+1641495855217	Rename type 'ProductControllerTest'
+1641501866068	Rename type 'CreditRepository'
+1641566592721	Rename type 'CreditApplicationTests'
+1641566602951	Rename type 'CreditDatabaseTests'
+1641566674207	Copy compilation units
+1641567117124	Copy compilation units

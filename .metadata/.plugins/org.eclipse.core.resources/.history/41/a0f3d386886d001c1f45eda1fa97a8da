@@ -1,0 +1,9 @@
+package pl.pbarczewski.entity;
+
+
+// Interfejs implementowany przez główne encje programu.
+// Zawiera metodę "setCreditId", która przyjmuje parametr typu "int"
+// Niczego nie zwraca
+public interface EntityInterface {
+	void setCreditId(int id);
+}

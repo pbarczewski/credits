@@ -1,0 +1,22 @@
+package pl.pbarczewski.controller;
+
+import org.junit.Before;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import io.restassured.RestAssured;
+
+@SpringBootTest(webEnvironment = DEFINED_PORT)
+public class GreetControllerRealIntegrationTest {
+
+    @Before
+    public void setUp() {
+        RestAssured.port = 9001;
+    }
+
+    @Test
+    public void givenGreetURI_whenSendingReq_thenVerifyResponse() {
+        given().get("/greet")
+          .then()
+          .statusCode(200);
+    }
+}

@@ -1,0 +1,109 @@
+package pl.pbarczewski.service;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import pl.pbarczewski.components.RequestInterface;
+import pl.pbarczewski.entity.Credit;
+import pl.pbarczewski.entity.Customer;
+import pl.pbarczewski.entity.EntityInterface;
+import pl.pbarczewski.entity.Product;
+import pl.pbarczewski.repository.CreditRepository;
+import pl.pbarczewski.request.GetRequest;
+import pl.pbarczewski.request.PostRequest;
+import pl.pbarczewski.request.Request;
+import pl.pbarczewski.urls.QueryParameter;
+import pl.pbarczewski.urls.Url;
+import pl.pbarczewski.wrapper.Entities;
+
+// Klasa będąca głownym serwisem aplikacji.
+// Korzysta z klasy 'CreditRepository' w celu manipulowania danymi w schemacie 'CreditDB'.
+// Zawiera metody prywatne i publiczne.
+@Service
+public class CreditService {
+	private CreditRepository creditRepository;
+	@SuppressWarnings("rawtypes")
+	private Request request;
+	private Entities entities;
+	private Customer customer;
+	private Credit credit;
+	private Product product;
+	
+	@Autowired
+	public CreditService(CreditRepository creditRepository) {
+		this.creditRepository = creditRepository;
+	}
+
+	public List<Credit> getCredits() {
+		return creditRepository.findAll();
+	}
+	
+	// Główna metoda serwisu, zawiera w sobie metody pomocnicze "getEntities", 
+	// oraz "post" i "completeCredit".
+	// Przyjmuje jako parametr obiekt typu 'Entities'.
+	// Zwraca wartość typu 'int' będącą nadanym przez aplikację numerem kredytu.
+	public int createCredit(Entities entities) throws Exception {
+		getEntities(entities);
+		post(Url.CUSTOMER_URL, customer);
+		post(Url.PRODUCT_URL, product);
+		completeCredit(customer, product);
+		creditRepository.save(this.entities.getCredit());
+		return credit.getId();
+	}
+	
+	// Prywatna metoda pomocnicza, przypisuje pola obiektu "Entities" do osobnych zmiennych
+	// odpowiednio "credit", "customer" i "product". Wywołuje także metodę "setId"
+	// służącą do nadania każdemu wyżej wymienionemu obiektowi taki sam numer "Id".
+	// Niczego nie zwraca.
+	private void getEntities(Entities entities) throws Exception {
+		this.entities = entities;
+		this.entities.setId();
+		this.credit = entities.getCredit();
+		this.customer = entities.getCustomer();
+		this.product = entities.getProduct();
+	}
+	
+	// Prywatna metoda służąca do nawiązania komunikacji z innymi serwisami aplikacji,
+	// w celu stworzenia obiektów w poszczególnych bazach danych.
+	// Przyjmuje dwa parametry, "Url", oraz "EntityInterface".
+	// Korzysta z interfejsu "RequestInterface".
+	// Wyrzuca wyjątek "NullPointerException".
+	private void post(Url url, EntityInterface entity) {
+		if(entity != null) {
+		request = new PostRequest<Object>(url, entity);
+		RequestInterface.createConnection(request);
+		} else {
+			throw new NullPointerException("Entity is empty");
+		}
+	}
+	
+	
+	// Metoda służąca do stworzenia połączenie typu "Get".
+	// Przyjmuje argument typu "String".
+	// Wykorzystuje interfejs "RequestInterface" do stworzenia połączenia.
+	// Zwraca listę obiektów klasy "Product".
+	@SuppressWarnings("unchecked")
+	public List<Product> getProducts(String id) {
+		request = new GetRequest(Url.PRODUCT_URL, product, QueryParameter.ID, id);
+		RequestInterface.createConnection(request);
+		return request.getListOfEntities();
+		
+	}
+	
+	// Metoda służąca do stworzenia połączenie typu "Get".
+	// Przyjmuje argument typu "String".
+	// Wykorzystuje interfejs "RequestInterface" do stworzenia połączenia.
+	// Zwraca listę obiektów klasy "Customer".
+	@SuppressWarnings("unchecked")
+	public List<Customer> getCustomers(String id) {
+		request = new GetRequest(Url.CUSTOMER_URL, customer, QueryParameter.ID, id);
+		RequestInterface.createConnection(request);
+		return request.getListOfEntities();
+	}
+	
+	// Prywatna metoda pomocnicza, służy do wywołana metody "completeCredit". 
+	// Przyjmuje dwa parametry, obiekt klasy "Customer" i obiekt klasy "Product".
+	// Informuje o możliwości wyrzucenia wyjątku "Exception".
+	private void completeCredit(Customer customer, Product product) throws Exception {
+		this.credit.completeCredit(customer, product);
+	}
+}

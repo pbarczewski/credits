@@ -1,0 +1,139 @@
+package pl.pbarczewski;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+import io.restassured.RestAssured;
+import io.restassured.filter.log.RequestLoggingFilter;
+import io.restassured.filter.log.ResponseLoggingFilter;
+import pl.pbarczewski.controller.ProductController;
+import pl.pbarczewski.entity.Product;
+import pl.pbarczewski.service.ProductService;
+
+
+
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@WebMvcTest(controllers = ProductController.class)
+@Testcontainers
+class ProductApplicationTests {
+
+	@Autowired
+	private ProductService productService;
+	
+	@Autowired
+	private MockMvc mockMvc;
+	
+	@Container
+	private static MySQLContainer mysqlContainer = new MySQLContainer("mysql:latest");
+	
+	@DynamicPropertySource
+	public static void ovverideProps(DynamicPropertyRegistry registry) {
+		registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
+		registry.add("spring.datasource.username", mysqlContainer::getUsername);
+		registry.add("spring.datasource.password", mysqlContainer::getPassword);
+	}
+	
+	@Test
+	void contextLoads() throws Exception {
+		mockMvc.perform(get("/products"))
+		.andExpect(status().isOk());
+	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = {""})
+	void all_products_should_be_returned_if_id_is_Empty(String id) {
+		//given
+		Product product = new Product("New Product", 100);
+		product.setCreditId(12345);
+		Product product2 = new Product("New Product2", 200);
+		product2.setCreditId(123456);
+		Product product3 = new Product("New Product3", 300);
+		product3.setCreditId(45678);
+		//when
+		productService.saveProduct(product);
+		productService.saveProduct(product2);
+		productService.saveProduct(product3);
+		List<Product> products = productService.getProductsByIds(id);
+		//then
+		assertThat(products).hasSize(3);
+	}
+	
+	@Test
+	void check_If_Product_Is_Saved_Succesfully() {
+		//given
+		Product product = new Product("New Product", 100);
+		product.setCreditId(4555);
+		//when
+		List<Product> products = productService.getProductsByIds("");
+		assertThat(products).hasSize(0);
+		//then
+		productService.saveProduct(product);
+		products = productService.getProductsByIds("4555");
+		assertThat(products).hasSize(1);
+		assertEquals(products.get(0).getCreditId(), 4555);
+	}
+	
+	@Test
+	void check_If_Saved_Product_Contains_Correct_Values() {
+		//given
+		Product receivedProduct;
+		Product product = new Product("New Product", 100);
+		product.setCreditId(4555);
+		//when
+		productService.saveProduct(product);
+		List<Product> products = productService.getProductsByIds("4555");
+		receivedProduct = products.get(0);
+		//then
+		assertAll(
+				() -> assertEquals("New Product", receivedProduct.getName()),
+				() -> assertEquals(100, receivedProduct.getValue()),
+				() -> assertEquals(4555, receivedProduct.getCreditId())
+				);
+	}
+	
+	@ParameterizedTest
+	@ValueSource(strings = {"4555,12345"})
+	void check_If_Database_Returns_Producst_With_Provided_Id(String id) {
+		//given
+		Product product = new Product("New Product", 100);
+		product.setCreditId(4555);
+		Product product2 = new Product("New Product2", 200);
+		product2.setCreditId(12345);
+		Product product3 = new Product("New Product3", 300);
+		product3.setCreditId(45678);
+		Product product4 = new Product("New Product4", 400);
+		product4.setCreditId(5434);
+		//when
+		productService.saveProduct(product);
+		productService.saveProduct(product2);
+		productService.saveProduct(product3);
+		List<Product> products = productService.getProductsByIds(id);
+		products = productService.getProductsByIds(id);
+		//then
+		assertThat(products).hasSize(2);
+		assertThat(products.get(0)).isNotNull();
+		assertEquals(products.get(1).getValue(), 200);
+	}
+}

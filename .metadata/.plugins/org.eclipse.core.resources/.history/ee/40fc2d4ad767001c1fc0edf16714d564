@@ -1,0 +1,75 @@
+package pl.pbarczewski;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import pl.pbarczewski.entity.Product;
+import pl.pbarczewski.service.ProductService;
+
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@Testcontainers
+class ProductApplicationTests {
+
+	@Autowired
+	private ProductService productService;
+	private String id;
+	
+	@Container
+	private static MySQLContainer mysqlContainer = new MySQLContainer("mysql:latest");
+	
+	@DynamicPropertySource
+	public static void ovverideProps(DynamicPropertyRegistry registry) {
+		registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
+		registry.add("spring.datasource.username", mysqlContainer::getUsername);
+		registry.add("spring.datasource.password", mysqlContainer::getPassword);
+	}
+	
+	@Test
+	void contextLoads() {
+	}
+	
+	
+	@Test
+	void check_If_All_Products_are_Returned_If_Id_is_Empty() {
+		//given
+		id = "";
+		Product product = new Product("New Product", 100);
+		product.setCreditId(12345);
+		Product product2 = new Product("New Product2", 200);
+		product2.setCreditId(123456);
+		Product product3 = new Product("New Product3", 300);
+		product3.setCreditId(45678);
+		//when
+		productService.saveProduct(product);
+		productService.saveProduct(product2);
+		productService.saveProduct(product3);
+		List<Product> products = productService.getProductsByIds(id);
+		//then
+		assertThat(products).hasSize(3);
+	}
+	
+	@Test
+	void check_If_Product_Is_Saved_Succesfully() {
+		//given
+		id= "";
+		Product product = new Product("New Product", 100);
+		product.setCreditId(12345);
+		//when
+		List<Product> products = productService.getProductsByIds(id);
+		assertThat(products).hasSize(3);
+		//then
+		productService.saveProduct(product);
+		products = productService.getProductsByIds(id);
+		assertThat(products).hasSize(4);
+	}
+	
+	
+}

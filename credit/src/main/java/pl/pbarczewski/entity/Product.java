@@ -1,0 +1,61 @@
+package pl.pbarczewski.entity;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+// Encja reprezentujaca produkt.
+// Zawiera pola "creditId" (klucz główny), oraz pola "name" i "value".
+// Zawiera gettery i settery dla odpowiednich pól.
+@Entity
+@Table(name="Product", schema="ProductDB")
+public class Product implements EntityInterface {
+	
+	@Id
+	private int creditId;
+	@NotNull
+	@Pattern(regexp="[A-Z]([a-zA-Z0-9]+_?\\s?)*[a-zA-Z0-9]+$")
+	private String name;
+	@NotNull
+	@Min(1)
+	@Max(1000000)
+	private int value;
+	
+	public Product() {
+		
+	}
+	
+	public Product(@NotNull @Pattern(regexp = "[A-Z]([a-zA-Z0-9]+_?\\s?)*[a-zA-Z0-9]+$") String name,
+			@NotNull @Min(1) @Max(1000000) int value) {
+		this.name = name;
+		this.value = value;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getValue() {
+		return value;
+	}
+
+	public void setValue(int value) {
+		this.value = value;
+	}
+
+	@Override
+	public void setCreditId(int id) {
+		this.creditId = id;		
+	}
+
+	public Integer getCreditId() {
+		return creditId;
+	}
+}

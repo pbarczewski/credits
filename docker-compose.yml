@@ -1,0 +1,43 @@
+version: "3"
+services:
+  database:
+    image: mysql
+    container_name: database
+    environment: 
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: user
+      MYSQL_DATABASE: bankDB
+    ports:
+      - "3307:3306"
+    restart: on-failure
+  credits:
+    build: ./credit
+    container_name: SpringBoot_Credits
+    ports:
+      - "9001:9001"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/bankDB?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      - database 
+    restart: always 
+  products:
+    build: ./product
+    container_name: SpringBoot_Products
+    ports:
+      - "9000:9000"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/bankDB?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      - database 
+    restart: on-failure  
+  customers:
+    build: ./customer
+    container_name: SpringBoot_Customers
+    ports:
+      - "9090:9090"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/bankDB?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+    depends_on:
+      - database 
+    restart: on-failure  

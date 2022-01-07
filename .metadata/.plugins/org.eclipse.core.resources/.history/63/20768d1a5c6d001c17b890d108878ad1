@@ -1,0 +1,44 @@
+package pl.pbarczewski.service;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import pl.pbarczewski.entity.Customer;
+import pl.pbarczewski.repository.CustomerRepository;
+
+
+@Service
+public class CustomerService {
+	
+	private CustomerRepository customerRepository;
+	private final List<Integer> listOfParameters;
+	
+	public CustomerService(CustomerRepository customerRepository) {
+		this.customerRepository = customerRepository;
+		this.listOfParameters = new ArrayList<>();
+	}
+	
+	public void saveCustomer(Customer customer) {
+		customerRepository.save(customer);
+	}
+	
+	public List<Customer> getCustomersByIds(String id) {
+		getIds(id);
+		System.out.println(id + " tutaj jestem");
+		if(listOfParameters.size() > 0) {
+		return customerRepository.findAllById(listOfParameters);
+		} else {
+			return customerRepository.findAll();
+		}
+	}
+
+	private void getIds(String id) {
+		String[] splitted = id.split(",");
+		for(String singleString : splitted) {
+			if(singleString.matches("[0-9]+")) {
+			listOfParameters.add(Integer.parseInt(singleString));
+		} 
+	}
+	}
+}

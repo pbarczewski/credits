@@ -1,0 +1,207 @@
+package pl.pbarczewski;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import pl.pbarczewski.entity.Credit;
+import pl.pbarczewski.entity.Customer;
+import pl.pbarczewski.entity.Product;
+import pl.pbarczewski.repository.CreditRepository;
+import pl.pbarczewski.wrapper.Entities;
+
+
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
+@Testcontainers
+class CreditApplicationTests {
+	
+	private Credit firstCredit;
+	private Product firstProduct;
+	private Product secondProduct;
+	private Customer firstCustomer;
+	private Customer secondCustomer;
+	
+
+	@Autowired
+	private CreditRepository creditRepository;
+	List<Credit> credits = new ArrayList<>();
+	
+	@BeforeEach
+	public void createEntities() {
+		firstCredit = new Credit("First");
+		firstProduct = new Product("First Product", 100);
+		firstProduct.setCreditId(12345);
+		secondProduct = new Product("Second Product", 200);
+		secondProduct.setCreditId(54321);
+		firstCustomer = new Customer("Jan", "Kowalski", "12345678901");
+		firstCustomer.setCreditId(12345);
+		secondCustomer = new Customer("Anna", "Nowak", "98765432101");
+		secondCustomer.setCreditId(54321);
+	}
+	
+	@Container
+	private static MySQLContainer mysqlContainer = new MySQLContainer("mysql:latest");
+	
+	@DynamicPropertySource
+	public static void ovverideProps(DynamicPropertyRegistry registry) {
+		registry.add("spring.datasource.url", mysqlContainer::getJdbcUrl);
+		registry.add("spring.datasource.username", mysqlContainer::getUsername);
+		registry.add("spring.datasource.password", mysqlContainer::getPassword);
+	}
+	
+	@Test
+	void all_credits_should_be_returned() {
+		//given
+		firstCredit.setCreditId(12345);
+		firstCredit.completeCreditInfo(firstCustomer, firstProduct);
+		Credit secondCredit = new Credit("Second");
+		secondCredit.setCreditId(54321);
+		secondCredit.completeCreditInfo(secondCustomer, secondProduct);
+		
+		//when
+	//	creditRepository.save(firstCredit);
+	//	creditRepository.save(secondCredit);
+	//	credits = creditRepository.findAll();
+		//then
+		assertThat(credits).hasSize(0);
+	}
+	
+	@Test
+	void exception_should_be_thrown_if_customer_is_null() {
+		//given
+		firstCredit.setCreditId(12345);
+		//when
+		//then
+		assertThrows
+		(IllegalArgumentException.class, 
+				()-> firstCredit.completeCreditInfo(null, firstProduct));
+	}
+	
+	@Test
+	void exception_should_be_thrown_if_product_is_null() {
+		//given
+		firstCredit.setCreditId(12345);
+		//when
+		//then
+		assertThrows
+		(IllegalArgumentException.class, 
+				()-> firstCredit.completeCreditInfo(firstCustomer, null));
+	}
+	
+	@Test
+	void no_exception_is_thrown_if_credit_and_product_are_correct() {
+		//given
+		firstCredit.setCreditId(12345);
+		//when
+		//then
+		 assertDoesNotThrow(()-> firstCredit.completeCreditInfo(firstCustomer, firstProduct));
+	}
+	
+	@Test
+	void credit_should_be_created_if_product_and_customer_are_correct() {
+		//given
+		firstCredit.setCreditId(12345);
+		//when
+		firstCredit.completeCreditInfo(firstCustomer, firstProduct);
+		Product product = firstCredit.getProduct();
+		Customer customer = firstCredit.getCustomer();
+		//then
+		assertAll(
+				() -> assertEquals("First", firstCredit.getName()),
+				() -> assertEquals("Jan", customer.getFirstName()),
+				() -> assertEquals("First Product", product.getName())
+				);
+	}
+	
+	@Test
+	void all_entities_should_have_same_generated_id() throws Exception {
+		//given
+		Credit credit = new Credit("New");
+		Product product = new Product("Product", 100);
+		Customer customer = new Customer("Jan", "Kowalski", "12345678901");
+		Entities entities = new Entities(credit, product, customer);
+		//when
+		entities.setId();
+		//then
+		int id = entities.getCredit().getId();
+		assertAll(
+				() -> assertEquals(product.getCreditId(), id),
+				() -> assertEquals(customer.getCreditId(), id)
+				);
+	}
+	
+	
+	/*
+	 * @ParameterizedTest
+	 * 
+	 * @ValueSource(strings = {""}) void
+	 * all_credits_should_be_returned_if_id_is_Empty(String id) { //given Credit
+	 * credit = new Credit("Kredyt"); Customer customer = new Customer("Adam",
+	 * "Kowalski", "12345678901"); Product product = new Product("Produkt", 100);
+	 * Entities entities = new Entities()
+	 * 
+	 * //when customerService.saveCustomer(customer);
+	 * customerService.saveCustomer(secondCustomer);
+	 * customerService.saveCustomer(thirdCustomer); customers =
+	 * customerService.getCustomersByIds(id); //then
+	 * assertThat(customers).hasSize(3); }
+	 * 
+	 * @Test public void check_If_Product_Is_Saved_Succesfully() { //given Customer
+	 * customer = new Customer("Adam", "Kowalski", "12345678901");
+	 * customer.setCreditId(1111); //when customers =
+	 * customerService.getCustomersByIds(""); assertThat(customers).hasSize(0);
+	 * //then customerService.saveCustomer(customer);; customers =
+	 * customerService.getCustomersByIds("1111"); assertThat(customers).hasSize(1);
+	 * assertEquals(customers.get(0).getCreditId(), 1111); }
+	 * 
+	 * @Test public void check_If_Saved_Product_Contains_Correct_Values() { //given
+	 * Customer receivedCustomer; Customer customer = new Customer("Adam",
+	 * "Kowalski", "12345678901"); customer.setCreditId(1111); //when
+	 * customerService.saveCustomer(customer); customers =
+	 * customerService.getCustomersByIds("1111"); receivedCustomer =
+	 * customers.get(0); //then assertAll( () -> assertEquals("Adam",
+	 * receivedCustomer.getFirstName()), () -> assertEquals("Kowalski",
+	 * receivedCustomer.getSurname()), () -> assertEquals("12345678901",
+	 * receivedCustomer.getPesel()), () -> assertEquals(1111,
+	 * receivedCustomer.getCreditId()) ); }
+	 * 
+	 * @ParameterizedTest
+	 * 
+	 * @ValueSource(strings = {"4555,12345"}) void
+	 * check_If_Database_Returns_Producst_With_Provided_Id(String id) { //given
+	 * Customer firstCustomer = new Customer("Adam", "Kowalski", "12345678901");
+	 * firstCustomer.setCreditId(4555); Customer secondCustomer = new
+	 * Customer("Jan", "Kowalski", "12345678902");
+	 * secondCustomer.setCreditId(12345); Customer thirdCustomer = new
+	 * Customer("Robert", "Lewandowski", "12345678903");
+	 * thirdCustomer.setCreditId(45678); Customer lastCustomer = new
+	 * Customer("Janina", "Lewandowska", "12345678904");
+	 * lastCustomer.setCreditId(5434); //when
+	 * customerService.saveCustomer(firstCustomer);
+	 * customerService.saveCustomer(secondCustomer);
+	 * customerService.saveCustomer(thirdCustomer);
+	 * customerService.saveCustomer(lastCustomer); customers =
+	 * customerService.getCustomersByIds(id); //then
+	 * assertThat(customers).hasSize(2); assertThat(customers.get(0)).isNotNull();
+	 * assertEquals(customers.get(1).getCreditId(), 12345);
+	 * assertEquals(customers.get(0).getPesel(), "12345678901"); }
+	 */
+
+}

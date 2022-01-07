@@ -1,0 +1,10 @@
+content_assist_lru_history=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?><history maxLHS\="100" maxRHS\="10"><lhs name\="java.lang.Enum"><rhs name\="org.springframework.test.annotation.DirtiesContext$ClassMode"/><rhs name\="org.springframework.boot.test.context.SpringBootTest$WebEnvironment"/><rhs name\="org.springframework.http.HttpMethod"/></lhs><lhs name\="org.springframework.util.MimeType"><rhs name\="org.springframework.http.MediaType"/></lhs><lhs name\="org.springframework.http.MediaType"><rhs name\="org.springframework.http.MediaType"/></lhs></history>
+content_assist_number_of_computers=16
+content_assist_proposals_background=255,255,255
+content_assist_proposals_foreground=0,0,0
+eclipse.preferences.version=1
+org.eclipse.jdt.ui.formatterprofiles.version=17
+sourceHoverBackgroundColor=255,255,225
+spelling_locale_initialized=true
+useAnnotationsPrefPage=true
+useQuickDiffPrefPage=true

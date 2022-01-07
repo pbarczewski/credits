@@ -1,0 +1,26 @@
+package pl.pbarczewski.request;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import pl.pbarczewski.entity.EntityInterface;
+import pl.pbarczewski.urls.Url;
+
+// Klasa dziedzicząca po abstrakcyjnej klasie "Request".
+// Służy do tworzenia zapytań typu "Post".
+public class PostRequest<T> extends Request<T> {
+	
+	public PostRequest(Url url, EntityInterface entityInterface) {
+		super(url, entityInterface);
+		this.httpMethod = HttpMethod.POST;
+	}
+
+	@SuppressWarnings("unchecked")
+	private HttpEntity<T> entity = new HttpEntity<T>((T) entityInterface);
+	
+	// Nadpisana metoda klasy "Request"
+	// Za pomocą podanych w konstruktorze parametrów tworzy połączenie z określonym serwisem
+	// w celu zapisania obiektu do bazy danych
+	@Override
+	public void execute() {
+		restTemplate.exchange(url.getUrl(), httpMethod, entity, entityInterface.getClass());
+	}
+}

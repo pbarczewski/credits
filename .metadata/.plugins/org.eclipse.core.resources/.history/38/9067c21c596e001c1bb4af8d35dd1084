@@ -1,0 +1,17 @@
+package pl.pbarczewski.controller;
+
+@SpringBootTest(webEnvironment = DEFINED_PORT)
+public class GreetControllerRealIntegrationTest {
+
+    @Before
+    public void setUp() {
+        RestAssured.port = DEFAULT_PORT;
+    }
+
+    @Test
+    public void givenGreetURI_whenSendingReq_thenVerifyResponse() {
+        given().get("/greet")
+          .then()
+          .statusCode(200);
+    }
+}
