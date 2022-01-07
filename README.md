@@ -67,7 +67,7 @@ curl -X POST http://localhost:9001/credits -H "Content-Type: application/json" -
 
 Wpisywane dane posiadają pewne ograniczenia, blokujące przesyłanie nieprawidłowych danych.
 1. Credit:
- - "name" (regexp="^[A-Z]([a-zA-Z0-9]+_?\\s?)*[a-zA-Z0-9]+$") - Nazwa musi zaczynać się od wielkiej litery, może posiadać cyfry, spacje oraz znak "_". Musi kończyć się znakiem alfanumerycznym.
+ - "name" (regexp="[A-Z]([a-zA-Z0-9]+_?\\s?)*[a-zA-Z0-9]+$") - Nazwa musi zaczynać się od wielkiej litery, może posiadać cyfry, spacje oraz znak "_". Musi kończyć się znakiem alfanumerycznym.
 2. Customer:
  - "firstName" (regexp="[A-Z][a-z]{2,49}$") - Imię musi zaczynać się od wielkiej litery, minimalnie trzy znaki, maksmymalnie 50. Dozwolone są jedynie znaki alfabetyczne
  - "surname" (regexp="[A-Z][a-z]+[-]?[A-Z]?[a-z]+$") - Nazwisko musi zaczynać się od wielkiej litery, nie ma ograniczenia maksymalnej liczby znaków. Może zawierać znak "-", musi kończyć się małą literą.
