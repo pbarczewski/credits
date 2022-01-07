@@ -97,17 +97,18 @@ Przykładowa odpowiedź:\
 Przykładowa odpowiedź:\
 [{"creditId":556818,"name":"Produkt","value":100},{"creditId":738796,"name":"Produkt 3","value":300},{"creditId":870195,"name":"Produkt 2","value":200}]
 
-3. curl http://localhost:9001/products?id=556818,738796 - zapytanie zwróci produkty o podanym numerze kredytu
+3. curl http://localhost:9001/products?id=556818,738796 - zapytanie zwróci produkty o podanym numerze id
 
 Przykładowa odpowiedź:\
 [{"creditId":556818,"name":"Produkt","value":100},{"creditId":738796,"name":"Produkt 3","value":300}]
 
-4. curl http://localhost:9001/products?id=556818,xxx - w przypadku podania nieprawidłowego parametru, lub kredytu o nieistniejącym numerze zapytanie zwróci tylko te wyniki które znajdują się w bazie danych
+4. curl http://localhost:9001/products?id=556818,xxx - w przypadku podania nieprawidłowego parametru, lub produktu o nieistniejącym numerze id zapytanie zwróci tylko te wyniki które znajdują się w bazie danych
 
 Przykładowa odpowiedź:\
 [{"creditId":556818,"name":"Produkt","value":100}]
 
 5. curl http://localhost:9001/products?id=11111,xxxx - gdy obie wartości są nieprawidłowe, zwrócona zostanie pusta lista
+
 Przykładowa odpowiedź:\
 []
 
@@ -121,21 +122,21 @@ Przykładowa odpowiedź:\
 Przykładowa odpowiedź:\
 [{"creditId":556818,"firstName":"Jan","surname":"Kowalski","pesel":"12345678901"},{"creditId":738796,"firstName":"Robert","surname":"Lewandowski","pesel":"12345678903"},{"creditId":870195,"firstName":"Janina","surname":"Nowak","pesel":"12345678902"}]
 
-3. curl http://localhost:9001/customers?id=556818,870195 - zapytanie zwróci produkty o podanym numerze kredytu
+8. curl http://localhost:9001/customers?id=556818,870195 - zapytanie zwróci wszystkich klientów o podanym numerze id
 
 Przykładowa odpowiedź:\
 [{"creditId":556818,"firstName":"Jan","surname":"Kowalski","pesel":"12345678901"},{"creditId":870195,"firstName":"Janina","surname":"Nowak","pesel":"12345678902"}]
 
-4. curl http://localhost:9001/customers?id=556818,xxxx - w przypadku podania nieprawidłowego parametru, lub kredytu o nieistniejącym numerze zapytanie zwróci tylko te wyniki które znajdują się w bazie danych
+9. curl http://localhost:9001/customers?id=556818,xxxx - w przypadku podania nieprawidłowego parametru, lub id o nieistniejącym numerze zapytanie zwróci tylko te wyniki które znajdują się w bazie danych
 
 Przykładowa odpowiedź:\
 [{"creditId":556818,"firstName":"Jan","surname":"Kowalski","pesel":"12345678901"}]
 
-5. curl http://localhost:9001/customers?id=11111,xxxx - gdy obie wartości są nieprawidłowe, zwrócona zostanie pusta lista
+10. curl http://localhost:9001/customers?id=11111,xxxx - gdy obie wartości są nieprawidłowe, zwrócona zostanie pusta lista
 Przykładowa odpowiedź:\
 []
 
-6. curl http://localhost:9001/customers?id= - zwróci wszystkie wyniki
+11. curl http://localhost:9001/customers?id= - zwróci wszystkie wyniki
 
 Przykładowa odpowiedź:\
 [{"creditId":556818,"firstName":"Jan","surname":"Kowalski","pesel":"12345678901"},{"creditId":738796,"firstName":"Robert","surname":"Lewandowski","pesel":"12345678903"},{"creditId":870195,"firstName":"Janina","surname":"Nowak","pesel":"12345678902"}]
