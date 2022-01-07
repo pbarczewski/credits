@@ -21,9 +21,9 @@ Stworzony za pomocą
  - git clone https://github.com/pbarczewski/credits.git
 2. Stworzenie plików jar
  - w scieżce w której stworzyliśmy projekt wchodzimy do podfolderów poszczególnych komponentów\
-  .../credit -> w wierszu poleceń wpisuemy - mvn package -DskipTests\
-  .../product -> w wierszu poleceń wpisuemy - mvn package -DskipTests\
-  .../customer -> w wierszu poleceń wpisuemy - mvn package -DskipTests\
+  .../credit -> w wierszu poleceń wpisuemy: mvn package -DskipTests\
+  .../product -> w wierszu poleceń wpisuemy: mvn package -DskipTests\
+  .../customer -> w wierszu poleceń wpisuemy: mvn package -DskipTests\
  Polecenia te są konieczne do stworzenie plików .jar
 4. Uruchomienie kontenerów dockera
  - W wierszu poleceń w głównym folderze w którym sklonowaliśmy repozytorium wpisujemy poniższe polecenia. Stworzą one i uruchomią kontenery dockera:
