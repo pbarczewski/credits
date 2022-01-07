@@ -43,19 +43,19 @@ Baza danych jest pusta więc żeby zacząć pracę z programem, musimy wprowadzi
 
 POST: http://localhost:9001/credits
 
-{
-    "credit" : {
-        "name" : "Nowy kredyt"
-    },
-    "customer": {
-        "firstName": "Jan",
-        "surname": "Kowalski",
-        "pesel":"12345678901"
-    },
-    "product": {
-        "name": "Produkt",
-        "value": 100
-    }
+{\
+    "credit" : {\
+        "name" : "Nowy kredyt"\
+    },\
+    "customer": {\
+        "firstName": "Jan",\
+        "surname": "Kowalski",\
+        "pesel":"12345678901"\
+    },\
+    "product": {\
+        "name": "Produkt",\
+        "value": 100\
+    }\
 }
 
 Rezultat: {losowa_liczba}
@@ -79,7 +79,7 @@ Wpisywane dane posiadają pewne ograniczenia, blokujące przesyłanie nieprawid�
 ## Get - pobieranie użytkowników
 Zapytanie Get pobiera dane. Poniżej przykładowe zapytania realizowane za pomocą wiersza poleceń:
 
-Po wprowadzeniu wartości:
+Po wprowadzeniu wartości:\
 curl -X POST http://localhost:9001/credits -H "Content-Type: application/json" -d "{\"credit\":{\"name\":\"Kredyt 3\"},\"customer\":{\"firstName\":\"Robert\",\"surname\":\"Lewandowski\",\"pesel\":\"12345678903\"},\"product\":{\"name\":\"Produkt 3\",\"value\":300}}"
 
 curl -X POST http://localhost:9001/credits -H "Content-Type: application/json" -d "{\"credit\":{\"name\":\"Nowy kredyt\"},\"customer\":{\"firstName\":\"Jan\",\"surname\":\"Kowalski\",\"pesel\":\"12345678901\"},\"product\":{\"name\":\"Produkt\",\"value\":100}}"
