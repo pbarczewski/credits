@@ -38,7 +38,7 @@ Głownym komponentem programu jest moduł "credit" w którym zawarta jest znacz�
 3. Tabela "Product" zawiera kolumny "creditId", "name", "value"
 
 
-##Post - tworzenie kredytu
+## Post - tworzenie kredytu
 Baza danych jest pusta więc żeby zacząć pracę z programem, musimy wprowadzić do niego odpowiednie dane. Na wejściu program potrzebuje stworzyć trzy obiekty, skupione w jednym. Polecenie w odpowiedzi przekaże numer kredytu przyznanego przez aplikację. Realizacja zapytania za pomocą Postmana (zawierająca przykładowe dane) będzie wyglądać jak poniżej:
 
 POST: http://localhost:9001/credits
