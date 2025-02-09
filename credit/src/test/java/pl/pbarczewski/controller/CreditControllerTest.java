@@ -21,12 +21,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import pl.pbarczewski.entity.Credit;
-import pl.pbarczewski.entity.Customer;
-import pl.pbarczewski.entity.Product;
+import pl.pbarczewski.infrastructure.model.Credit;
+import pl.pbarczewski.infrastructure.model.Customer;
+import pl.pbarczewski.infrastructure.model.Product;
 import pl.pbarczewski.repositories.CustomerRepository;
 import pl.pbarczewski.repositories.ProductRepository;
-import pl.pbarczewski.repository.CreditRepository;
+import pl.pbarczewski.infrastructure.repository.CreditJpaRepository;
 
 @Testcontainers
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -44,7 +44,7 @@ public class CreditControllerTest {
 	private ProductRepository productRepository;
 	
 	@Autowired
-	private CreditRepository creditRepository;
+	private CreditJpaRepository creditJpaRepository;
 	
 	@BeforeEach
 	void init() {
@@ -116,8 +116,8 @@ public class CreditControllerTest {
 	@Test
 	public void credit_list_should_not_be_empty_if_credits_are_added_to_database() {
 		//given
-		creditRepository.save(firstCredit);
-		creditRepository.save(secondCredit);
+		creditJpaRepository.save(firstCredit);
+		creditJpaRepository.save(secondCredit);
 		//when
 		Credit[] credits = this.restTemplate.getForObject("http://localhost:"+port +"/credits", Credit[].class);
 		//then
@@ -143,8 +143,8 @@ public class CreditControllerTest {
 		productRepository.save(secondProduct);
 		firstCredit.completeCredit(customer, product);
 		secondCredit.completeCredit(secondCustomer, secondProduct);
-		creditRepository.save(firstCredit);
-		creditRepository.save(secondCredit);
+		creditJpaRepository.save(firstCredit);
+		creditJpaRepository.save(secondCredit);
 		//then
 		Credit[] credits = this.restTemplate.getForObject("http://localhost:"+port +"/credits", Credit[].class);
 		assertAll(

@@ -1,7 +1,6 @@
 package pl.pbarczewski.request;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import pl.pbarczewski.entity.EntityInterface;
 import pl.pbarczewski.urls.Url;
 
 // Klasa dziedzicząca po abstrakcyjnej klasie "Request".

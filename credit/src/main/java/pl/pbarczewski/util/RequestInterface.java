@@ -1,4 +1,4 @@
-package pl.pbarczewski.components;
+package pl.pbarczewski.util;
 import pl.pbarczewski.request.Request;
 
 

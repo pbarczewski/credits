@@ -2,71 +2,49 @@ package pl.pbarczewski.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pl.pbarczewski.components.RequestInterface;
-import pl.pbarczewski.entity.Credit;
-import pl.pbarczewski.entity.Customer;
-import pl.pbarczewski.entity.EntityInterface;
-import pl.pbarczewski.entity.Product;
-import pl.pbarczewski.repository.CreditRepository;
+import pl.pbarczewski.domain.CreditRepositoryInterface;
+import pl.pbarczewski.util.RequestInterface;
+import pl.pbarczewski.domain.CreditServiceInterface;
+import pl.pbarczewski.infrastructure.model.Credit;
+import pl.pbarczewski.infrastructure.model.Customer;
+import pl.pbarczewski.infrastructure.model.Product;
+import pl.pbarczewski.infrastructure.repository.CreditJpaRepository;
 import pl.pbarczewski.request.GetRequest;
 import pl.pbarczewski.request.PostRequest;
 import pl.pbarczewski.request.Request;
 import pl.pbarczewski.urls.QueryParameter;
 import pl.pbarczewski.urls.Url;
-import pl.pbarczewski.wrapper.Entities;
 
-// Klasa będąca głownym serwisem aplikacji.
-// Korzysta z klasy 'CreditRepository' w celu manipulowania danymi w schemacie 'CreditDB'.
-// Zawiera metody prywatne i publiczne.
 @Service
-public class CreditService {
-	private CreditRepository creditRepository;
-	@SuppressWarnings("rawtypes")
-	private Request request;
-	private Entities entities;
-	private Customer customer;
-	private Credit credit;
-	private Product product;
+public class CreditService implements CreditServiceInterface {
+	private CreditRepositoryInterface creditRepositoryInterface;
 	
 	@Autowired
-	public CreditService(CreditRepository creditRepository) {
-		this.creditRepository = creditRepository;
+	public CreditService(CreditJpaRepository creditJpaRepository) {
+		this.creditJpaRepository = creditJpaRepository;
 	}
 
 	public List<Credit> getCredits() {
-		return creditRepository.findAll();
+		return creditJpaRepository.findAll();
 	}
-	
-	// Główna metoda serwisu, zawiera w sobie metody pomocnicze "getEntities", 
-	// oraz "post" i "completeCredit".
-	// Przyjmuje jako parametr obiekt typu 'Entities'.
-	// Zwraca wartość typu 'int' będącą nadanym przez aplikację numerem kredytu.
-	public int createCredit(Entities entities) throws Exception {
+
+	@Override
+	public String generateNumber() {
+		String generateNumber = creditJpaRepository.gene
+		return creditJpaRepository.getCreditByCreditNumber();
+	}
+
+
+	public int createCredit() throws Exception {
 		getEntities(entities);
 		post(Url.CUSTOMER_URL, customer);
 		post(Url.PRODUCT_URL, product);
 		completeCredit(customer, product);
-		creditRepository.save(this.entities.getCredit());
+		creditJpaRepository.save(this.entities.getCredit());
 		return credit.getId();
 	}
-	
-	// Prywatna metoda pomocnicza, przypisuje pola obiektu "Entities" do osobnych zmiennych
-	// odpowiednio "credit", "customer" i "product". Wywołuje także metodę "setId"
-	// służącą do nadania każdemu wyżej wymienionemu obiektowi taki sam numer "Id".
-	// Niczego nie zwraca.
-	private void getEntities(Entities entities) throws Exception {
-		this.entities = entities;
-		this.entities.setId();
-		this.credit = entities.getCredit();
-		this.customer = entities.getCustomer();
-		this.product = entities.getProduct();
-	}
-	
-	// Prywatna metoda służąca do nawiązania komunikacji z innymi serwisami aplikacji,
-	// w celu stworzenia obiektów w poszczególnych bazach danych.
-	// Przyjmuje dwa parametry, "Url", oraz "EntityInterface".
-	// Korzysta z interfejsu "RequestInterface".
-	// Wyrzuca wyjątek "NullPointerException".
+
+
 	private void post(Url url, EntityInterface entity) {
 		if(entity != null) {
 		request = new PostRequest<Object>(url, entity);

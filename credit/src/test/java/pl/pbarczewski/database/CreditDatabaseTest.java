@@ -21,10 +21,9 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import pl.pbarczewski.entity.Credit;
-import pl.pbarczewski.entity.Customer;
-import pl.pbarczewski.entity.Product;
-import pl.pbarczewski.wrapper.Entities;
+import pl.pbarczewski.infrastructure.model.Credit;
+import pl.pbarczewski.infrastructure.model.Customer;
+import pl.pbarczewski.infrastructure.model.Product;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)

@@ -1,4 +1,4 @@
-package pl.pbarczewski.components;
+package pl.pbarczewski.util;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 // Klasa pomocnicza wykorzystywana do nadania unikatowego numeru ID 
 // dla każdej z klas reprezentujących encje wykorzystywane w aplikacji.
 public class IdGenerator {
-	private static final Set<Integer> creditsId = new HashSet<>();
+	private static final Set<Integer> creditIdSet = new HashSet<>();
 	private static int creditId;
 	
 	// Metoda statyczna realizująca główne założenie klasy.
@@ -16,8 +16,8 @@ public class IdGenerator {
 		boolean isAvailable = true;
 		while(isAvailable) {
 			creditId = ThreadLocalRandom.current().nextInt(1, 1000000);
-			if(!creditsId.contains(creditId)) {
-				creditsId.add(creditId);
+			if(!creditIdSet.contains(creditId)) {
+				creditIdSet.add(creditId);
 				isAvailable = false;
 			}
 		}

@@ -2,7 +2,6 @@ package pl.pbarczewski.request;
 import java.util.List;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
-import pl.pbarczewski.entity.EntityInterface;
 import pl.pbarczewski.urls.Url;
 
 // Abstrakcyjna klasa służąca jako baza do konstruowania zapytań http.

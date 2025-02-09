@@ -1,9 +1,8 @@
 package pl.pbarczewski.request;
 import java.util.Arrays;
 import org.springframework.http.HttpMethod;
-import pl.pbarczewski.entity.Customer;
-import pl.pbarczewski.entity.EntityInterface;
-import pl.pbarczewski.entity.Product;
+import pl.pbarczewski.infrastructure.model.Customer;
+import pl.pbarczewski.infrastructure.model.Product;
 import pl.pbarczewski.urls.QueryParameter;
 import pl.pbarczewski.urls.Url;
 
