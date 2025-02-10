@@ -1,86 +1,60 @@
 package pl.pbarczewski.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import pl.pbarczewski.common.Connection;
 import pl.pbarczewski.domain.CreditRepositoryInterface;
-import pl.pbarczewski.util.RequestInterface;
 import pl.pbarczewski.domain.CreditServiceInterface;
 import pl.pbarczewski.infrastructure.model.Credit;
-import pl.pbarczewski.infrastructure.model.Customer;
-import pl.pbarczewski.infrastructure.model.Product;
-import pl.pbarczewski.infrastructure.repository.CreditJpaRepository;
-import pl.pbarczewski.request.GetRequest;
-import pl.pbarczewski.request.PostRequest;
-import pl.pbarczewski.request.Request;
-import pl.pbarczewski.urls.QueryParameter;
+import pl.pbarczewski.rest.ResponseBody;
+import pl.pbarczewski.rest.request.CreditRequest;
 import pl.pbarczewski.urls.Url;
 
 @Service
 public class CreditService implements CreditServiceInterface {
 	private CreditRepositoryInterface creditRepositoryInterface;
-	
+
 	@Autowired
-	public CreditService(CreditJpaRepository creditJpaRepository) {
-		this.creditJpaRepository = creditJpaRepository;
+	public CreditService(CreditRepositoryInterface creditRepositoryInterface) {
+		this.creditRepositoryInterface = creditRepositoryInterface;
 	}
 
 	public List<Credit> getCredits() {
-		return creditJpaRepository.findAll();
+		return creditRepositoryInterface.getCredits();
 	}
 
 	@Override
-	public String generateNumber() {
-		String generateNumber = creditJpaRepository.gene
-		return creditJpaRepository.getCreditByCreditNumber();
+	public String createCredit(CreditRequest creditRequest) {
+		String generatedCreditNumber = creditRepositoryInterface.generateNumber();
+		creditRequest.getCreditModel().setCreditNumber(generatedCreditNumber);
+
+		ResponseBody responseBody = connectToMicroSystems(Url.PRODUCT_URL, creditRequest);
+
+		if(responseBody.getHttpStatus() != HttpStatus.OK) {
+			return null;
+		}
+
+
 	}
 
 
-	public int createCredit() throws Exception {
-		getEntities(entities);
-		post(Url.CUSTOMER_URL, customer);
-		post(Url.PRODUCT_URL, product);
-		completeCredit(customer, product);
-		creditJpaRepository.save(this.entities.getCredit());
-		return credit.getId();
-	}
 
 
-	private void post(Url url, EntityInterface entity) {
-		if(entity != null) {
-		request = new PostRequest<Object>(url, entity);
-		RequestInterface.createConnection(request);
-		} else {
-			throw new NullPointerException("Entity is empty");
+	private ResponseBody connectToMicroSystems(Url url, CreditRequest creditRequest) {
+		HttpEntity<CreditRequest> httpEntity = new HttpEntity<>(creditRequest, Connection.generateHttpHeaders());
+		try {
+			ResponseEntity<ResponseBody> responseBody = Connection.createConnection(url, HttpMethod.POST, httpEntity);
+			return responseBody.getBody();
+		} catch (Exception e) {
+			return null;
 		}
 	}
-	
-	// Metoda służąca do stworzenia połączenie typu "Get".
-	// Przyjmuje argument typu "String".
-	// Wykorzystuje interfejs "RequestInterface" do stworzenia połączenia.
-	// Zwraca listę obiektów klasy "Product".
-	@SuppressWarnings("unchecked")
-	public List<Product> getProducts(String id) {
-		request = new GetRequest(Url.PRODUCT_URL, product, QueryParameter.ID, id);
-		RequestInterface.createConnection(request);
-		return request.getListOfEntities();
-		
+
+	private String connectToCustomerSystem(String generatedCreditNumber, CreditRequest creditRequest, HttpEntity<CreditRequest> httpEntity) {
+		Connection.createConnection(Url.CUSTOMER_URL, HttpMethod.POST, httpEntity)
 	}
-	
-	// Metoda służąca do stworzenia połączenie typu "Get".
-	// Przyjmuje argument typu "String".
-	// Wykorzystuje interfejs "RequestInterface" do stworzenia połączenia.
-	// Zwraca listę obiektów klasy "Customer".
-	@SuppressWarnings("unchecked")
-	public List<Customer> getCustomers(String id) {
-		request = new GetRequest(Url.CUSTOMER_URL, customer, QueryParameter.ID, id);
-		RequestInterface.createConnection(request);
-		return request.getListOfEntities();
-	}
-	
-	// Prywatna metoda pomocnicza, służy do wywołana metody "completeCredit". 
-	// Przyjmuje dwa parametry, obiekt klasy "Customer" i obiekt klasy "Product".
-	// Informuje o możliwości wyrzucenia wyjątku "Exception".
-	private void completeCredit(Customer customer, Product product) throws Exception {
-		this.credit.completeCredit(customer, product);
-	}
+
+
+
 }

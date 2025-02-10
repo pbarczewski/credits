@@ -29,16 +29,6 @@ public class CreditRepositoryImpl implements CreditRepositoryInterface {
         return creditJpaRepository.findAll();
     }
 
-    @Override
-    public String createCredit(CreditModel creditModel, ProductModel productModel, CustomerModel customerModel) {
-        try {
-
-
-        } catch (Exception e) {
-            return null;
-        }
-        return null;
-    }
 
     @Override
     public String generateNumber() {
@@ -51,6 +41,11 @@ public class CreditRepositoryImpl implements CreditRepositoryInterface {
             }
         }
         return creditCardNumber;
+    }
+
+    @Override
+    public String createCredit(CreditModel creditModel, CustomerModel customerModel, ProductModel productModel) {
+        return null;
     }
 
 

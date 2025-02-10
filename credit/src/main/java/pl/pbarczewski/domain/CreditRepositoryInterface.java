@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface CreditRepositoryInterface {
     List<Credit> getCredits();
-    String createCredit(CreditModel creditModel, ProductModel productModel, CustomerModel customerModel);
     String generateNumber();
+    String createCredit(CreditModel creditModel, CustomerModel customerModel, ProductModel productModel);
 }
