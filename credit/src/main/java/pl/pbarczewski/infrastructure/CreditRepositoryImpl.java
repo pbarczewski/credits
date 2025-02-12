@@ -45,6 +45,7 @@ public class CreditRepositoryImpl implements CreditRepositoryInterface {
 
     @Override
     public String createCredit(CreditModel creditModel, CustomerModel customerModel, ProductModel productModel) {
+        Long ProductId =
         return null;
     }
 

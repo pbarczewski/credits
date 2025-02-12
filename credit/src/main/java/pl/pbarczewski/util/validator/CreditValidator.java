@@ -4,7 +4,6 @@ package pl.pbarczewski.util.validator;
 import javafx.util.Pair;
 import org.springframework.stereotype.Component;
 import pl.pbarczewski.domain.model.CustomerModel;
-
 import java.util.ArrayList;
 import java.util.List;
 
