@@ -1,11 +1,11 @@
 package pl.pbarczewski.infrastructure;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import pl.pbarczewski.domain.CreditRepositoryInterface;
 import pl.pbarczewski.domain.model.CreditModel;
 import pl.pbarczewski.domain.model.CustomerModel;
 import pl.pbarczewski.domain.model.ProductModel;
-import pl.pbarczewski.infrastructure.mapper.CreditMapper;
 import pl.pbarczewski.infrastructure.model.Credit;
 import pl.pbarczewski.infrastructure.repository.CreditJpaRepository;
 
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 
+@Repository
 public class CreditRepositoryImpl implements CreditRepositoryInterface {
 
     private CreditJpaRepository creditJpaRepository;
@@ -45,7 +46,7 @@ public class CreditRepositoryImpl implements CreditRepositoryInterface {
 
     @Override
     public String createCredit(CreditModel creditModel, CustomerModel customerModel, ProductModel productModel) {
-        Long ProductId =
+
         return null;
     }
 

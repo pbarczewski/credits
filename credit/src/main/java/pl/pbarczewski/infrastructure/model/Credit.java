@@ -1,17 +1,17 @@
 package pl.pbarczewski.infrastructure.model;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name="Credit", schema="CreditDB")
+@Table(name="credit", schema="creditdb")
 public class Credit {
 	
 	@Id

@@ -9,7 +9,7 @@ import pl.pbarczewski.domain.CreditServiceInterface;
 import pl.pbarczewski.infrastructure.model.Credit;
 import pl.pbarczewski.rest.ResponseBody;
 import pl.pbarczewski.rest.request.CreditRequest;
-import pl.pbarczewski.urls.Url;
+import pl.pbarczewski.util.validator.Url;
 
 @Service
 public class CreditService implements CreditServiceInterface {
@@ -35,7 +35,7 @@ public class CreditService implements CreditServiceInterface {
 			return null;
 		}
 
-
+		return null;
 	}
 
 
@@ -51,9 +51,9 @@ public class CreditService implements CreditServiceInterface {
 		}
 	}
 
-	private String connectToCustomerSystem(String generatedCreditNumber, CreditRequest creditRequest, HttpEntity<CreditRequest> httpEntity) {
+	/*private String connectToCustomerSystem(String generatedCreditNumber, CreditRequest creditRequest, HttpEntity<CreditRequest> httpEntity) {
 		Connection.createConnection(Url.CUSTOMER_URL, HttpMethod.POST, httpEntity)
-	}
+	}*/
 
 
 

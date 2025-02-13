@@ -1,7 +1,7 @@
 package pl.pbarczewski.util.validator;
 
 
-import javafx.util.Pair;
+
 import org.springframework.stereotype.Component;
 import pl.pbarczewski.domain.model.CustomerModel;
 import java.util.ArrayList;
@@ -10,12 +10,12 @@ import java.util.List;
 @Component
 public class CreditValidator {
 
-    private Pair<Boolean, List<String>> isCorrect(CustomerModel customerModel) {
+    /*private Pair<Boolean, List<String>> isCorrect(CustomerModel customerModel) {
         List<String> msg = new ArrayList<>();
         isModelEmpty(customerModel, msg);
         isPeselCorrect(customerModel.getPesel(), msg);
         return msg.isEmpty() ? new Pair<>(true, msg) : new Pair<>(false, msg);
-    }
+    }*/
 
     private void isModelEmpty(CustomerModel customerModel, List<String> msg) {
         if(customerModel == null) {

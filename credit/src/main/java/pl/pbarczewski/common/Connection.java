@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import pl.pbarczewski.rest.ResponseBody;
 import pl.pbarczewski.rest.request.CreditRequest;
-import pl.pbarczewski.urls.Url;
+import pl.pbarczewski.util.validator.Url;
 
 import java.util.Arrays;
 

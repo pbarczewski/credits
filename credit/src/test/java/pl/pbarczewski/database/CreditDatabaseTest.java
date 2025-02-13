@@ -22,8 +22,6 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import pl.pbarczewski.infrastructure.model.Credit;
-import pl.pbarczewski.infrastructure.model.Customer;
-import pl.pbarczewski.infrastructure.model.Product;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)

@@ -1,4 +1,4 @@
-package pl.pbarczewski.urls;
+package pl.pbarczewski.util.validator;
 
 import lombok.Getter;
 

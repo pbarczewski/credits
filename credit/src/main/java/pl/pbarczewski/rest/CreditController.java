@@ -1,18 +1,12 @@
 package pl.pbarczewski.rest;
 import java.util.List;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pbarczewski.infrastructure.model.Credit;
-import pl.pbarczewski.infrastructure.model.Customer;
-import pl.pbarczewski.infrastructure.model.Product;
 import pl.pbarczewski.service.CreditService;
 
-@RestController("credits")
+@RestController("credit")
 public class CreditController {
 	private CreditService creditService;
 

@@ -22,8 +22,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import pl.pbarczewski.infrastructure.model.Credit;
-import pl.pbarczewski.infrastructure.model.Customer;
-import pl.pbarczewski.infrastructure.model.Product;
 import pl.pbarczewski.repositories.CustomerRepository;
 import pl.pbarczewski.repositories.ProductRepository;
 import pl.pbarczewski.infrastructure.repository.CreditJpaRepository;
