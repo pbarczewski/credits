@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.pbarczewski.common.Connection;
 import pl.pbarczewski.domain.CreditRepositoryInterface;
 import pl.pbarczewski.domain.CreditServiceInterface;
+import pl.pbarczewski.domain.model.CustomerModel;
 import pl.pbarczewski.infrastructure.model.Credit;
 import pl.pbarczewski.rest.ResponseBody;
 import pl.pbarczewski.rest.request.CreditRequest;
@@ -20,7 +21,7 @@ public class CreditService implements CreditServiceInterface {
 		this.creditRepositoryInterface = creditRepositoryInterface;
 	}
 
-	public List<Credit> getCredits() {
+	public List<CustomerModel> getCredits() {
 		return creditRepositoryInterface.getCredits();
 	}
 

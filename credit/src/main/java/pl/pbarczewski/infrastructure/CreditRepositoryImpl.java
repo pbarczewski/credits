@@ -6,6 +6,7 @@ import pl.pbarczewski.domain.CreditRepositoryInterface;
 import pl.pbarczewski.domain.model.CreditModel;
 import pl.pbarczewski.domain.model.CustomerModel;
 import pl.pbarczewski.domain.model.ProductModel;
+import pl.pbarczewski.infrastructure.mapper.CreditMapper;
 import pl.pbarczewski.infrastructure.model.Credit;
 import pl.pbarczewski.infrastructure.repository.CreditJpaRepository;
 
@@ -26,8 +27,9 @@ public class CreditRepositoryImpl implements CreditRepositoryInterface {
     }
 
     @Override
-    public List<Credit> getCredits() {
-        return creditJpaRepository.findAll();
+    public List<CustomerModel> getCredits() {
+       // return creditJpaRepository.findAll().stream().map(x  -> CreditMapper.convertToCreditModel(x)).toList();
+        return null;
     }
 
 

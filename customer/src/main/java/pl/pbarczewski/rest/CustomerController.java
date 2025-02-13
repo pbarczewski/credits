@@ -6,28 +6,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import pl.pbarczewski.entity.Customer;
+import pl.pbarczewski.domain.CustomerServiceInterface;
+import pl.pbarczewski.domain.model.CustomerModel;
+import pl.pbarczewski.infrastructure.model.Customer;
 import pl.pbarczewski.service.CustomerService;
 
-// Kontroler modułu "customer", wykorzystuje pomocniczą klasę "CustomerService"
-// Zawiera metodę "createCustomer umożliwiającą zapisywanie obiektu typu "Customer" do bazy danych
-// Zawiera metodę "getCustomers" zwracającą listę obiektów typu "Customer"
-@RestController
+
+@RestController("customer")
 public class CustomerController {
-	private CustomerService customerService;
+	private CustomerServiceInterface customerServiceInterface;
 	
 	@Autowired
-	public CustomerController(CustomerService customerService) {
-		this.customerService = customerService;
+	public CustomerController(CustomerServiceInterface customerServiceInterface) {
+		this.customerServiceInterface = customerServiceInterface;
 	}
 
-	@PostMapping("/customers")
-	public void createCustomer(@RequestBody Customer customer) {
-		customerService.saveCustomer(customer);
+	@PostMapping("/")
+	public void createCustomer(@RequestBody CustomerModel customerModel, String creditNumber) {
+		customerServiceInterface.saveCustomer(customer);
 	}
 	
-	@GetMapping("/customers")
-	public List<Customer> getCustomers(@RequestParam (required= false) String id) {
-		return customerService.getCustomersByIds(id);
-	}
+
 }

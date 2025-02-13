@@ -5,45 +5,30 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import pl.pbarczewski.entity.Customer;
-import pl.pbarczewski.repository.CustomerRepository;
+import pl.pbarczewski.domain.CustomerRepositoryInterface;
+import pl.pbarczewski.domain.CustomerServiceInterface;
+import pl.pbarczewski.domain.model.CustomerModel;
+import pl.pbarczewski.infrastructure.model.Customer;
+import pl.pbarczewski.infrastructure.repository.CustomerJpaRepository;
 
 @Service
-public class CustomerService {
-	private CustomerRepository customerRepository;
-	private final List<Integer> listOfParameters;
+public class CustomerService implements CustomerServiceInterface {
+	private CustomerRepositoryInterface customerRepositoryInterface;
 	
 	@Autowired
-	public CustomerService(CustomerRepository customerRepository) {
-		this.customerRepository = customerRepository;
-		this.listOfParameters = new ArrayList<>();
-	}
-	
-
-	public List<Customer> getCustomersByIds(String id) {
-		try {
-		getIds(id);
-			if(listOfParameters.size() > 0) {
-				return customerRepository.findAllById(listOfParameters);
-			} else {
-			return customerRepository.findAll();
-		} 
-		} finally {
-			this.listOfParameters.clear();
-		}
+	public CustomerService(CustomerRepositoryInterface customerRepositoryInterface) {
+		this.customerRepositoryInterface = customerRepositoryInterface;
 	}
 
-	public void saveCustomer(Customer customer) {
-		customerRepository.save(customer);
+	@Override
+	public List<CustomerModel> getCredits() {
+		return null;
 	}
-	
 
-	private void getIds(String id) {
-		String[] splitted = id.split(",");
-		for(String singleString : splitted) {
-			if(singleString.matches("[0-9]+")) {
-			listOfParameters.add(Integer.parseInt(singleString));
-			} 
-		}
+	@Override
+	public String saveCustomer(String creditNumber, CustomerModel customerModel) {
+		return customerRepositoryInterface.createCredit();
 	}
+
 }
+
