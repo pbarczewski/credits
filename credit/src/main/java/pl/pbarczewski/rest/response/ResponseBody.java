@@ -1,4 +1,4 @@
-package pl.pbarczewski.rest;
+package pl.pbarczewski.rest.response;
 
 import lombok.Data;
 import org.springframework.http.HttpStatus;

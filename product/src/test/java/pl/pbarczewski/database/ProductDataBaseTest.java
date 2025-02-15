@@ -23,7 +23,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import pl.pbarczewski.entity.Product;
+import pl.pbarczewski.infrastructure.model.Product;
 import pl.pbarczewski.service.ProductService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)

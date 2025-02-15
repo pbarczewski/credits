@@ -7,8 +7,7 @@ import pl.pbarczewski.common.Connection;
 import pl.pbarczewski.domain.CreditRepositoryInterface;
 import pl.pbarczewski.domain.CreditServiceInterface;
 import pl.pbarczewski.domain.model.CustomerModel;
-import pl.pbarczewski.infrastructure.model.Credit;
-import pl.pbarczewski.rest.ResponseBody;
+import pl.pbarczewski.rest.response.ResponseBody;
 import pl.pbarczewski.rest.request.CreditRequest;
 import pl.pbarczewski.util.validator.Url;
 
@@ -27,19 +26,8 @@ public class CreditService implements CreditServiceInterface {
 
 	@Override
 	public String createCredit(CreditRequest creditRequest) {
-		String generatedCreditNumber = creditRepositoryInterface.generateNumber();
-		creditRequest.getCreditModel().setCreditNumber(generatedCreditNumber);
-
-		ResponseBody responseBody = connectToMicroSystems(Url.PRODUCT_URL, creditRequest);
-
-		if(responseBody.getHttpStatus() != HttpStatus.OK) {
-			return null;
-		}
-
 		return null;
 	}
-
-
 
 
 	private ResponseBody connectToMicroSystems(Url url, CreditRequest creditRequest) {
@@ -51,11 +39,5 @@ public class CreditService implements CreditServiceInterface {
 			return null;
 		}
 	}
-
-	/*private String connectToCustomerSystem(String generatedCreditNumber, CreditRequest creditRequest, HttpEntity<CreditRequest> httpEntity) {
-		Connection.createConnection(Url.CUSTOMER_URL, HttpMethod.POST, httpEntity)
-	}*/
-
-
 
 }
