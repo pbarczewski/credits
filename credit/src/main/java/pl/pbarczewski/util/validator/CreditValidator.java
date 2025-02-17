@@ -4,7 +4,7 @@ package pl.pbarczewski.util.validator;
 
 import org.springframework.stereotype.Component;
 import pl.pbarczewski.domain.model.CustomerModel;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Component
@@ -21,7 +21,7 @@ public class CreditValidator {
         if(customerModel == null) {
             msg.add("Brak żądania");
         }
-        if(customerModel.getName().isEmpty()) {
+        if(customerModel.getFirstName().isEmpty()) {
             msg.add("Brakuje nazwy kredytu");
         }
         if(customerModel.getPesel().isEmpty()) {

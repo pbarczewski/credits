@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CustomerModel {
     private String creditNumber;
-    private String name;
+    private String firstName;
     private String surname;
     private String pesel;
 }

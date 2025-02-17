@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductModel implements Model {
     private String creditNumber;
-    private String name;
+    private String productName;
 }

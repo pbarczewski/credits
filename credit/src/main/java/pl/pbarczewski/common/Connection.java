@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import pl.pbarczewski.rest.response.ResponseBody;
 import pl.pbarczewski.rest.request.CreditRequest;
-import pl.pbarczewski.util.validator.Url;
+import pl.pbarczewski.util.Url;
 
 import java.util.Arrays;
 
@@ -16,7 +16,6 @@ public class Connection {
         RestTemplate restTemplate = new RestTemplate();
         return restTemplate.exchange(url.getUrl(), httpMethod, httpEntity, ResponseBody.class);
     }
-
 
     // todo Do zrobienia na potem
     public static HttpHeaders generateHttpHeaders() {

@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 
-@Entity
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Entity
 @Table(name="credit_view", schema="creditdb")
 public class CreditView {
 	
@@ -23,11 +24,8 @@ public class CreditView {
 	@Column(name = "credit_number")
 	private String creditNumber;
 
-	@Column(name = "credit_number")
+	@Column(name = "credit_name")
 	private String creditName;
-
-	@Column(name = "name")
-	private String name;
 
 	@Column(name = "customer_name")
 	private String customerName;
@@ -38,7 +36,10 @@ public class CreditView {
 	@Column(name = "pesel")
 	private String pesel;
 
-	@Column(name = "productName")
+	@Column(name = "product_name")
+	private String productName;
+
+	@Column(name = "product_value")
 	private BigDecimal productValue;
 
 }

@@ -1,16 +1,13 @@
 package pl.pbarczewski.domain;
 
-import org.springframework.stereotype.Repository;
-import pl.pbarczewski.domain.model.CreditModel;
-import pl.pbarczewski.domain.model.CustomerModel;
-import pl.pbarczewski.domain.model.ProductModel;
-import pl.pbarczewski.infrastructure.model.Credit;
-
+import pl.pbarczewski.domain.model.CreditViewModel;
+import pl.pbarczewski.rest.request.CreditRequest;
 import java.util.List;
 
 
 public interface CreditRepositoryInterface {
-    List<CustomerModel> getCredits();
-    String generateNumber();
-    String createCredit(CreditModel creditModel, CustomerModel customerModel, ProductModel productModel);
+    List<CreditViewModel> getCreditCompleteInfo();
+    String createCredit(CreditRequest creditRequest);
+    CreditViewModel findSingleCredit(String creditName);
+    String getCreatedCreditNumber();
 }

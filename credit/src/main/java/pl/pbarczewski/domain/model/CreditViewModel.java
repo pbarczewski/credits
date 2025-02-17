@@ -11,6 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreditViewModel {
+
     private String creditNumber;
-    private String name;
+    private String creditName;
+    private String customerName;
+    private String surname;
+    private String pesel;
+    private String productName;
 }

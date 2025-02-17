@@ -1,7 +1,9 @@
 package pl.pbarczewski.infrastructure.mapper;
 
 import pl.pbarczewski.domain.model.CreditModel;
+import pl.pbarczewski.domain.model.CreditViewModel;
 import pl.pbarczewski.infrastructure.model.Credit;
+import pl.pbarczewski.infrastructure.model.CreditView;
 
 public class CreditMapper {
     public static Credit convertToCredit(String name, String number) {
@@ -12,11 +14,12 @@ public class CreditMapper {
                 .build();
     }
 
-    public static CreditModel convertToCreditModel(Credit credit) {
-        return CreditModel
+    public static CreditViewModel convertToCreditViewModel(CreditView creditView) {
+        return CreditViewModel
                 .builder()
-                .name(credit.getName())
-                .creditNumber(credit.getCreditNumber())
+
+
+
                 .build();
     }
 

@@ -1,27 +1,25 @@
 package pl.pbarczewski.service;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import pl.pbarczewski.common.Connection;
 import pl.pbarczewski.domain.CreditRepositoryInterface;
 import pl.pbarczewski.domain.CreditServiceInterface;
-import pl.pbarczewski.domain.model.CustomerModel;
-import pl.pbarczewski.rest.response.ResponseBody;
+import pl.pbarczewski.domain.model.CreditViewModel;
+import pl.pbarczewski.kafka.KafkaProducerService;
 import pl.pbarczewski.rest.request.CreditRequest;
-import pl.pbarczewski.util.validator.Url;
 
 @Service
 public class CreditService implements CreditServiceInterface {
 	private CreditRepositoryInterface creditRepositoryInterface;
 
-	@Autowired
+	Autowired
 	public CreditService(CreditRepositoryInterface creditRepositoryInterface) {
 		this.creditRepositoryInterface = creditRepositoryInterface;
 	}
 
-	public List<CustomerModel> getCredits() {
-		return creditRepositoryInterface.getCredits();
+	@Override
+	public List<CreditViewModel> getCreditCompleteInfo() {
+		return null;
 	}
 
 	@Override
@@ -29,15 +27,13 @@ public class CreditService implements CreditServiceInterface {
 		return null;
 	}
 
-
-	private ResponseBody connectToMicroSystems(Url url, CreditRequest creditRequest) {
-		HttpEntity<CreditRequest> httpEntity = new HttpEntity<>(creditRequest, Connection.generateHttpHeaders());
-		try {
-			ResponseEntity<ResponseBody> responseBody = Connection.createConnection(url, HttpMethod.POST, httpEntity);
-			return responseBody.getBody();
-		} catch (Exception e) {
-			return null;
-		}
+	@Override
+	public CreditViewModel findSingleCredit(String creditName) {
+		return null;
 	}
 
+	@Override
+	public String getCreatedCreditNumber() {
+		return creditRepositoryInterface.getCreatedCreditNumber();
+	}
 }

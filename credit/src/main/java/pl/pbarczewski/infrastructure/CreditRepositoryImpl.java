@@ -3,13 +3,11 @@ package pl.pbarczewski.infrastructure;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import pl.pbarczewski.domain.CreditRepositoryInterface;
-import pl.pbarczewski.domain.model.CreditModel;
-import pl.pbarczewski.domain.model.CustomerModel;
-import pl.pbarczewski.domain.model.ProductModel;
+import pl.pbarczewski.domain.model.CreditViewModel;
 import pl.pbarczewski.infrastructure.mapper.CreditMapper;
-import pl.pbarczewski.infrastructure.model.Credit;
 import pl.pbarczewski.infrastructure.repository.CreditJpaRepository;
-
+import pl.pbarczewski.infrastructure.repository.CreditViewJpaRepository;
+import pl.pbarczewski.rest.request.CreditRequest;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -19,36 +17,33 @@ public class CreditRepositoryImpl implements CreditRepositoryInterface {
 
     private CreditJpaRepository creditJpaRepository;
 
+    private CreditViewJpaRepository creditViewJpaRepository;
+
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     @Autowired
-    public CreditRepositoryImpl(CreditJpaRepository creditJpaRepository) {
+    public CreditRepositoryImpl(CreditJpaRepository creditJpaRepository, CreditViewJpaRepository creditViewJpaRepository) {
         this.creditJpaRepository = creditJpaRepository;
+        this.creditViewJpaRepository = creditViewJpaRepository;
     }
 
     @Override
-    public List<CustomerModel> getCredits() {
-       // return creditJpaRepository.findAll().stream().map(x  -> CreditMapper.convertToCreditModel(x)).toList();
+    public List<CreditViewModel> getCreditCompleteInfo() {
+        return creditViewJpaRepository.findAll().stream().map(CreditMapper::convertToCreditViewModel).toList();
+    }
+
+    @Override
+    public String createCredit(CreditRequest creditRequest) {
         return null;
     }
 
-
     @Override
-    public String generateNumber() {
-        boolean isNotInDatabase = true;
-        String creditCardNumber = generateCreditNumber();
-        while (isNotInDatabase) {
-            Credit credit = creditJpaRepository.getCreditByCreditNumber(creditCardNumber);
-            if(credit == null) {
-                isNotInDatabase = false;
-            }
-        }
-        return creditCardNumber;
+    public CreditViewModel findSingleCredit(String creditName) {
+        return null;
     }
 
     @Override
-    public String createCredit(CreditModel creditModel, CustomerModel customerModel, ProductModel productModel) {
-
+    public String getCreatedCreditNumber() {
         return null;
     }
 
@@ -61,5 +56,4 @@ public class CreditRepositoryImpl implements CreditRepositoryInterface {
         }
         return sb.toString();
     }
-
 }
