@@ -11,5 +11,5 @@ public interface CreditServiceInterface {
     List<CreditViewModel> getCreditCompleteInfo();
     String createCredit(CreditRequest creditRequest);
     CreditViewModel findSingleCredit(String creditName);
-    String getCreatedCreditNumber();
+    CreditRequest generateCreditNumber(CreditRequest creditRequest);
 }

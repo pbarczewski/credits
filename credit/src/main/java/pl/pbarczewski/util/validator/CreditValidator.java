@@ -1,55 +1,48 @@
 package pl.pbarczewski.util.validator;
 
-
-
 import org.springframework.stereotype.Component;
+import pl.pbarczewski.common.ValidationObject;
+import pl.pbarczewski.domain.model.CreditModel;
 import pl.pbarczewski.domain.model.CustomerModel;
-
-import java.util.List;
 
 @Component
 public class CreditValidator {
 
-    /*private Pair<Boolean, List<String>> isCorrect(CustomerModel customerModel) {
-        List<String> msg = new ArrayList<>();
-        isModelEmpty(customerModel, msg);
-        isPeselCorrect(customerModel.getPesel(), msg);
-        return msg.isEmpty() ? new Pair<>(true, msg) : new Pair<>(false, msg);
-    }*/
+    public ValidationObject validate(CreditModel creditModel) {
+        ValidationObject validationObject = new ValidationObject();
+        isNameEmpty(creditModel, validationObject);
+        return validationObject;
+    }
 
-    private void isModelEmpty(CustomerModel customerModel, List<String> msg) {
+
+    private void isNameEmpty(CreditModel creditModel, ValidationObject validationObject) {
+        if(creditModel.getName() == null || creditModel.getName().isEmpty()) {
+            validationObject.addMsg("Pusta nazwa kredytu");
+        }
+    }
+
+    private void isModelEmpty(CustomerModel customerModel, ValidationObject validationObject) {
         if(customerModel == null) {
-            msg.add("Brak żądania");
+            validationObject.addMsg("Brak żądania");
         }
         if(customerModel.getFirstName().isEmpty()) {
-            msg.add("Brakuje nazwy kredytu");
+            validationObject.addMsg("Brakuje nazwy kredytu");
         }
         if(customerModel.getPesel().isEmpty()) {
-            msg.add("Brakuje numeru PESEL");
+            validationObject.addMsg("Brakuje numeru PESEL");
         }
         if (customerModel.getSurname().isEmpty()) {
-            msg.add("Brakuje nazwiska");
+            validationObject.addMsg("Brakuje nazwiska");
         }
     }
 
-    private void isPeselCorrect(String pesel, List<String> msg) {
+    private void isPeselCorrect(String pesel, ValidationObject validationObject) {
         if(pesel.length() != 11)
-            msg.add("Numer PESEL jest nieprawidłowy");
+            validationObject.addMsg("Numer PESEL jest nieprawidłowy");
         try {
             Integer.parseInt(pesel);
         } catch (NumberFormatException e) {
-            msg.add("Numer PESEL nie jest liczbą");
+            validationObject.addMsg("Numer PESEL nie jest liczbą");
         }
     }
-
-    private boolean isCorrectName(String pesel) {
-        if(pesel.length() != 11) return false;
-        try {
-            Integer.parseInt(pesel);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
 }

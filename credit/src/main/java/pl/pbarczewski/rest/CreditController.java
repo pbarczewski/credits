@@ -1,12 +1,12 @@
 package pl.pbarczewski.rest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.pbarczewski.domain.CreditServiceInterface;
-import pl.pbarczewski.kafka.KafkaProducerService;
+import pl.pbarczewski.rest.request.CreditRequest;
+import pl.pbarczewski.rest.response.CreditResponse;
 
 
 @Slf4j
@@ -14,19 +14,22 @@ import pl.pbarczewski.kafka.KafkaProducerService;
 public class CreditController {
 	private CreditServiceInterface creditServiceInterface;
 
-	private KafkaProducerService kafkaProducerService;
+
 
 	@Autowired
-	public CreditController(CreditServiceInterface creditServiceInterface, KafkaProducerService kafkaProducerService) {
+	public CreditController(CreditServiceInterface creditServiceInterface) {
 		this.creditServiceInterface = creditServiceInterface;
-		this.kafkaProducerService = kafkaProducerService;
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<String> createCredit() {
-		String creditNumber = creditServiceInterface.getCreatedCreditNumber();
-		log.info("Generated credit number: {}" + creditNumber);
-		HttpStatus httpStatus = kafkaProducerService.sendModel(creditNumber).thenApply(x -> x);
+	public ResponseEntity<CreditResponse> createCredit(CreditRequest creditRequest) {
+		if(creditRequest == null) {
+			return null;
+		}
+		creditRequest = creditServiceInterface.generateCreditNumber(creditRequest);
+
+		log.info("Generated credit number: {}" + creditRequest.getCreditNumber());
+
 
 	}
 

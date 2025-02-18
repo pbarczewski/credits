@@ -1,6 +1,10 @@
 package pl.pbarczewski.domain;
 
-public interface KafkaConsumerServiceInterface {
+import pl.pbarczewski.rest.response.CreditResponse;
 
+public interface KafkaConsumerServiceInterface {
+    CreditResponse getCustomerResponse(CreditResponse creditResponse);
+
+    CreditResponse getProducerResponse(CreditResponse creditResponse);
 
 }

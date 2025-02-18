@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import pl.pbarczewski.domain.CreditRepositoryInterface;
 import pl.pbarczewski.domain.CreditServiceInterface;
 import pl.pbarczewski.domain.model.CreditViewModel;
-import pl.pbarczewski.kafka.KafkaProducerService;
 import pl.pbarczewski.rest.request.CreditRequest;
 
 @Service
@@ -33,7 +32,11 @@ public class CreditService implements CreditServiceInterface {
 	}
 
 	@Override
-	public String getCreatedCreditNumber() {
-		return creditRepositoryInterface.getCreatedCreditNumber();
+	public CreditRequest generateCreditNumber(CreditRequest creditRequest) {
+		String creditNumber = creditRepositoryInterface.getCreatedCreditNumber();
+		creditRequest.setCreditNumber(creditNumber);
+		return creditRequest;
 	}
+
+
 }

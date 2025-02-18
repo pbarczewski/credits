@@ -13,6 +13,8 @@ import pl.pbarczewski.domain.model.ProductModel;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreditRequest {
+
+    private String creditNumber;
     private CreditModel creditModel;
     private ProductModel productModel;
     private CustomerModel customerModel;

@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import pl.pbarczewski.domain.KafkaProducerServiceInterface;
+import pl.pbarczewski.domain.model.CustomerModel;
 import pl.pbarczewski.domain.model.Model;
+import pl.pbarczewski.rest.request.CreditRequest;
 
 import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
@@ -24,37 +26,27 @@ public class KafkaProducerService implements KafkaProducerServiceInterface {
     private final String creditToCustomerTopic = "credit-to-customer";
     private final String creditToProducerTopic = "credit-to-producer";
 
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, CreditRequest> kafkaTemplate;
 
     @Autowired
-    public KafkaProducerService(KafkaTemplate<String, String> kafkaTemplate) {
+    public KafkaProducerService(KafkaTemplate<String, CreditRequest> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
-    public CompletableFuture<HttpStatus> sendModel(String generatedNumber) {
-
-    }
 
     @Override
-    public CompletableFuture<HttpStatus> sendCreditNumberToCustomer(String generatedNumber) {
+    public CompletableFuture<HttpStatus> sendCreditNumberToCustomer(CreditRequest creditRequest) {
         log.info("Uruchomienie przsyłania do modułu customer");
-
-        return kafkaTemplate.send(creditToCustomerTopic, generatedNumber)
-                .handle((result, ex) -> {
-                    if (ex == null) {
-                        log.info("Przesłąnie do customer udane");
-
-                        //todo Do zrobienia
-                        return HttpStatus.OK;
-
-                    } else {
-                        return HttpStatus.NOT_FOUND;
-                    }
-                });
+        return kafkaTemplate.send(creditToCustomerTopic, creditRequest)
+                .thenApply(result -> HttpStatus.OK)
+                .exceptionally(ex -> HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
-    public CompletableFuture<HttpStatus> sendCreditNumberToProducer(String generatedNumber) {
-        return null;
+    public CompletableFuture<HttpStatus> sendCreditNumberToProducer(CreditRequest creditRequest) {
+        log.info("Uruchomienie przsyłania do modułu producer");
+        return kafkaTemplate.send(creditToProducerTopic, creditRequest)
+                .thenApply(result -> HttpStatus.OK)
+                .exceptionally(ex -> HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
 
