@@ -1,3 +1,5 @@
+# PROJECT IS BEING REDESIGNED
+
 # credits
 ## Spis treści
 * [Informacje ogólne](#info)
